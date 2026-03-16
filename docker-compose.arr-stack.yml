@@ -195,6 +195,27 @@ services:
       retries: 3
       start_period: 60s
 
+  #############################################
+  # Umlautfix (umlautadaptarr via VPN)        #
+  #############################################
+  umlautadaptarr:
+    image: pcjones/umlautadaptarr:latest
+    container_name: umlautadaptarr
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - SONARR__ENABLED=true
+      - SONARR__HOST=http://localhost:8989
+      - SONARR__APIKEY=${SONARR_APIKEY}
+      - RADARR__ENABLED=true
+      - RADARR__HOST=http://localhost:7878
+      - RADARR__APIKEY=${RADARR_APIKEY}
+
   # ═══════════════════════════════════════════════════════════════════════════
   # PROWLARR - Indexer manager. Finds download sources for Sonarr/Radarr.
   # Access: prowlarr.lan | prowlarr.yourdomain.com | NAS_IP:9696
